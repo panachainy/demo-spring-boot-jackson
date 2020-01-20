@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.example.demo.model.Car;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
 	ObjectMapper mapper = new ObjectMapper();
-	String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" , \"test\" : \"\" , \"Employee\" : {} }";
+	String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" , \"test\" : \"\" , \"employee\" : {\"em1\":\"x\"} }";
 
 	public HelloController() {
 	}
@@ -69,8 +71,22 @@ public class HelloController {
 		main.set("x", arrayNode);
 		main.put("test", "book");
 
-
 		return main.toString();
+	}
+
+	@RequestMapping("/test5")
+	public String test5() throws IOException {
+		String config1 = "employee.em1";
+		String[] arryConfig = config1.split("\\.");
+		List<String> configs = Arrays.asList(arryConfig);
+
+		JsonNode mainNode = mapper.readTree(json);
+		JsonNode toDateNode = mainNode;
+		for (String config : configs) {
+			toDateNode = toDateNode.get(config);
+
+		}
+		return toDateNode.asText();
 	}
 
 }
