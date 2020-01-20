@@ -56,22 +56,21 @@ public class HelloController {
 	}
 
 	@RequestMapping("/test4")
-	public String test4() throws IOException {
-		// ObjectMapper mapper = new ObjectMapper();
-		// // List<Car> e = new ArrayList<Car>();
-		// // ArrayNode array = mapper.valueToTree(e);
-		// ArrayNode arrayNode = mapper.createArrayNode();
-		// // arrayNode.addObject("x", mapper.createObjectNode());
+	public String test4() {
+		ObjectNode main = mapper.createObjectNode();
+		ArrayNode arrayNode = mapper.createArrayNode();
 
-		// arrayNode.addObject();
+		ObjectNode example = mapper.createObjectNode();
+		example.put("bookName", "Java");
+		example.put("price", "100");
 
-		// ObjectNode companyNode = mapper.valueToTree(json);
-		// companyNode.putArray("Employee").addAll(arrayNode);
-		// JsonNode result = mapper.createObjectNode().set("company", companyNode);
+		arrayNode.add(example);
 
-		// return result.toString();
+		main.set("x", arrayNode);
+		main.put("test", "book");
 
-		return mapper.readTree(json).toString();
+
+		return main.toString();
 	}
 
 }
