@@ -140,6 +140,41 @@ public class HelloController {
 		return mapper.writeValueAsString(initNode);
 	}
 
+	// Set with config array //USE
+	@RequestMapping("/test9")
+	public String test9() throws IOException {
+		String json = "{\"color\":\"Black\",\"type\":\"BMW\",\"test\":\"\",\"employee\":{\"em1\":\"x\",\"answer\":null},\"head\":{\"array\":[{\"arrayA\":null,\"arrayB\":\"TestjaA\"},{\"arrayA\":null,\"arrayB\":\"TestjaB\"},{\"arrayA\":null,\"arrayB\":\"TestjC\"}]}}";
+		JsonNode initNode = mapper.readTree(json);
+
+		String configDestination = "head.array.2.arrayA";
+		String[] configs = ConvertConfigsToArray(configDestination);
+
+		JsonNode lastNode = initNode;
+
+		String currentConfig;
+
+		// skip last value
+		for (int i = 0; i < configs.length - 1; i++) {
+
+			currentConfig = configs[i];
+			Integer intValue = TryParseInt(currentConfig);
+
+			if (intValue != null) {
+
+				lastNode = lastNode.get(intValue);
+
+			} else {
+				lastNode = lastNode.get(configs[i]);
+			}
+
+		}
+
+		ObjectNode objNode = (ObjectNode) lastNode;
+		objNode.put(configs[configs.length - 1], "newValue");
+
+		return mapper.writeValueAsString(initNode);
+	}
+
 	@RequestMapping("/test")
 	public String test() throws IOException {
 		String json = "{\"color\":\"Black\",\"type\":\"BMW\",\"test\":\"\",\"employee\":{\"em1\":\"x\",\"answer\":null}}";
@@ -160,5 +195,13 @@ public class HelloController {
 	private String[] ConvertConfigsToArray(String configs) {
 		String[] arryConfig = configs.split("\\.");
 		return arryConfig;
+	}
+
+	public static Integer TryParseInt(String text) {
+		try {
+			return Integer.parseInt(text);
+		} catch (NumberFormatException ex) {
+			return null;
+		}
 	}
 }
